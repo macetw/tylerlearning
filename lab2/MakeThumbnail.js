@@ -6,8 +6,8 @@ var gm = require('gm')
 var util = require('util');
 
 // constants
-var MAX_WIDTH  = 100;
-var MAX_HEIGHT = 100;
+var MAX_WIDTH  = 200;
+var MAX_HEIGHT = 200;
 
 // get reference to S3 client 
 var s3 = new AWS.S3();
@@ -60,8 +60,13 @@ exports.handler = function(event, context) {
 				var width  = scalingFactor * size.width;
 				var height = scalingFactor * size.height;
 
+                                var midpoint = height / 2;
+
 				// Transform the image buffer in memory.
 				this.resize(width, height)
+                                    .stroke("red", 1)
+                                    .fontSize(30)
+                                    .drawText(2,midpoint, "foobar")
 					.toBuffer(imageType, function(err, buffer) {
 						if (err) {
 							next(err);
