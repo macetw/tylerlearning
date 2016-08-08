@@ -1,0 +1,6 @@
+aws lambda create-function --region us-east-1 --function-name  helloworld --zip-file fileb://helloworld.zip --role arn:aws:iam::417503746048:role/LambdaExecutionRole --handler helloworld.handler --runtime nodejs --debug
+aws lambda list-functions
+aws lambda invoke-async --function-name helloworld --invoke-args inputfile.txt --debug
+aws lambda get-function --function-name helloworld
+aws lambda delete-function --function-name helloworld
+aws lambda list-functions
