@@ -1,0 +1,5 @@
+{
+    "key1":"foo1",
+    "key2":"bar2",
+    "key3":"foobar3"
+}
