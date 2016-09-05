@@ -1,10 +1,12 @@
-var http = require('http');
+buf = new Buffer(26)
+for (var i = 0; i < 26 ; i++) {
+  buf[i] = i+97
+}
 
-var server = http.createServer(function(request,response) {
-  response.writeHead(200, {"Content-Type": "text/plain"});
-  response.end("HelloWorld\n");
-})
-
-server.listen(8000);
-console.log("Server running atport 8000");
+console.log( buf.toString('ascii'));
+console.log( buf.toString('ascii',0,5));
+console.log( buf.toString('hex',0,0));
+console.log( buf.toString('utf8',0,5));
+console.log( buf.toString(undefined,0,5));
+console.log( buf.toJSON(buf));
 
