@@ -7,6 +7,7 @@ from database_setup import Base, Restaurant, MenuItem
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import cgi
 import sys
+import re
 
 # handler ...
 class webserverHandler(BaseHTTPRequestHandler):
@@ -35,9 +36,14 @@ class webserverHandler(BaseHTTPRequestHandler):
         output += "<A HREF=new>Create New Restaurant</A><P>"
         for restaurant in restaurants:
           output += "%s<BR>" % ( restaurant.name )
-          output += "<A HREF=edit?id=%s>Edit</A> * " % restaurant.id
+          output += "<A HREF=%s/edit>Edit</A> * " % restaurant.id
           output += "<A HREF=delete?id=%s>Delete</A>" % restaurant.id
           output += "<P>"
+
+      elif self.path.endswith("edit"):
+        idnum = re.match(r".*/(\d+)/edit", self.path).group(1)
+        newNameRestaurant = session.query(Restaurant).filter_by(id=idnum).first()
+        output += "<form method='POST' enctype='multipart/form-data' action='edit'><h2>What is the new name of it?</h2><input name='name' type='text' value='%s'><input type='submit' value='Edit'></form>" % (newNameRestaurant.name)
 
       else:
         self.send_error(404, "Command not found %s" % self.path)
@@ -51,13 +57,11 @@ class webserverHandler(BaseHTTPRequestHandler):
 
   def do_POST(self):
     try:
-      print 0
       session = self.connectDb()
 
       output = ""
       pass
       if self.path.endswith("new"):
-
         ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
         if ctype == 'multipart/form-data':
           fields=cgi.parse_multipart(self.rfile,pdict)
@@ -69,6 +73,23 @@ class webserverHandler(BaseHTTPRequestHandler):
 
         self.send_response(301)
         self.send_header('Location', 'restaurants')
+        self.send_header('Content-type', 'text/html');
+        self.end_headers()
+
+      elif self.path.endswith("edit"):
+        ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
+        if ctype == 'multipart/form-data':
+          fields=cgi.parse_multipart(self.rfile,pdict)
+          namecontent = fields.get('name')
+
+        idnum = re.match(r".*/(\d+)/edit", self.path).group(1)
+        newNameRestaurant = session.query(Restaurant).filter_by(id=idnum).first()
+        newNameRestaurant.name = namecontent[0]
+        session.add(newNameRestaurant)
+        session.commit()
+
+        self.send_response(301)
+        self.send_header('Location', '../restaurants')
         self.send_header('Content-type', 'text/html');
         self.end_headers()
 
