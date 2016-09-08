@@ -37,13 +37,18 @@ class webserverHandler(BaseHTTPRequestHandler):
         for restaurant in restaurants:
           output += "%s<BR>" % ( restaurant.name )
           output += "<A HREF=%s/edit>Edit</A> * " % restaurant.id
-          output += "<A HREF=delete?id=%s>Delete</A>" % restaurant.id
+          output += "<A HREF=%s/delete>Delete</A>" % restaurant.id
           output += "<P>"
 
       elif self.path.endswith("edit"):
         idnum = re.match(r".*/(\d+)/edit", self.path).group(1)
         newNameRestaurant = session.query(Restaurant).filter_by(id=idnum).first()
         output += "<form method='POST' enctype='multipart/form-data' action='edit'><h2>What is the new name of it?</h2><input name='name' type='text' value='%s'><input type='submit' value='Edit'></form>" % (newNameRestaurant.name)
+
+      elif self.path.endswith("delete"):
+        idnum = re.match(r".*/(\d+)/delete", self.path).group(1)
+        deleteRestaurant = session.query(Restaurant).filter_by(id=idnum).first()
+        output += "<H2>Are you sure you wish to delete %s?</H2><form method='POST' enctype='multipart/form-data' action='delete'><input type='submit' value='Delete'></form>" % (deleteRestaurant.name)
 
       else:
         self.send_error(404, "Command not found %s" % self.path)
@@ -86,6 +91,22 @@ class webserverHandler(BaseHTTPRequestHandler):
         newNameRestaurant = session.query(Restaurant).filter_by(id=idnum).first()
         newNameRestaurant.name = namecontent[0]
         session.add(newNameRestaurant)
+        session.commit()
+
+        self.send_response(301)
+        self.send_header('Location', '../restaurants')
+        self.send_header('Content-type', 'text/html');
+        self.end_headers()
+
+      elif self.path.endswith("delete"):
+        ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
+        if ctype == 'multipart/form-data':
+          fields=cgi.parse_multipart(self.rfile,pdict)
+          namecontent = fields.get('name')
+
+        idnum = re.match(r".*/(\d+)/delete", self.path).group(1)
+        deleteRestaurant = session.query(Restaurant).filter_by(id=idnum).first()
+        session.delete(deleteRestaurant)
         session.commit()
 
         self.send_response(301)
