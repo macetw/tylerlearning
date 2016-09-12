@@ -10,6 +10,10 @@
     {{i.description}}
 </td><td>
     {{i.price}}
+</td><td>
+    <A HREF="{{url_for('EditMenuItem', menu_id=i.id, restaurant_id=restaurant.id) }}">edit</A>
+</td><td>
+    <A HREF="{{url_for('DeleteMenuItem', menu_id=i.id, restaurant_id=restaurant.id )}}">delete</A>
 </td></tr>
     {% endfor %}
 </table>
