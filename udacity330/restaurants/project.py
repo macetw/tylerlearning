@@ -1,6 +1,6 @@
 #!/usr/bin/python27
 
-from flask import Flask
+from flask import Flask, render_template
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -32,11 +32,23 @@ def Restaurants():
 @app.route('/menu/<int:restaurant_id>/')
 def Menu(restaurant_id):
   session = connectDb()
+  restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
   menuItems = session.query(MenuItem).filter_by(restaurant_id = restaurant_id ).order_by('name')
-  output = "%d" % restaurant_id
-  for menuItem in menuItems:
-    output += "<li>%s: %s, %d<BR>" % ( menuItem.name, menuItem.price, menuItem.restaurant_id )
-  return output
+  return render_template('menu.html', restaurant=restaurant, items = menuItems)
+
+@app.route('/menu/newitem/<int:restaurant_id>/')
+def NewMenuItem(restaurant_id):
+  return "page to create a new menu item, Task 1 complete!"
+
+@app.route('/menu/edititem/<int:restaurant_id>/<int:menu_id>')
+def EditMenuItem(restaurant_id, menu_id):
+  return "page to edit a new item, Task 2 complete!"
+
+@app.route('/menu/deleteitem/<int:restaurant_id>/<int:menu_id>')
+def DeleteMenuItem(restaurant_id, menu_id):
+  return "page to delete a menu item, Task 3 complete!"
+
+
 
 
 def connectDb():
