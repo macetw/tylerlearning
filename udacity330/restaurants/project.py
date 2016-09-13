@@ -1,6 +1,6 @@
 #!/usr/bin/python27
 
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -86,6 +86,21 @@ def DeleteMenuItem(restaurant_id, menu_id):
     restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
     return render_template('menuitem-delete.html', restaurant=restaurant, deleteItem = deleteItem )
 
+@app.route('/menu/rest/<int:restaurant_id>')
+def Rest(restaurant_id):
+## This function provides the REST api for us.
+  session = connectDb()
+  restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
+  items = session.query(MenuItem).filter_by(restaurant_id = restaurant_id)
+  return jsonify(MenuItems=[i.serialize for i in items])
+
+@app.route('/menu/rest/<int:restaurant_id>/<int:menu_id>')
+def RestItem(restaurant_id, menu_id):
+## This function provides the REST api for us on a single item.
+  session = connectDb()
+  restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
+  item = session.query(MenuItem).filter_by(restaurant_id = restaurant_id).filter_by(id = menu_id).one()
+  return jsonify(MenuItem=item.serialize)
 
 def connectDb():
 ## This little function does the work to connect to the database.
