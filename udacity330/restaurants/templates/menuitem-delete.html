@@ -1,0 +1,25 @@
+<html>
+  <head>
+  <link rel=stylesheet type=text/css HREF="{{ url_for('static', filename='styles.css')}}">
+  </head>
+  <body>
+    <h1>{{ restaurant.name }}</h1>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul>
+{% for message in messages %}
+<li> {{ message }}
+{% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+Are you sure you'd like to remove {{ deleteItem.name }} from {{ restaurant.name }}
+
+<form METHOD=POST ACTION="{{url_for('DeleteMenuItem', menu_id=deleteItem.id, restaurant_id=restaurant.id )}}">
+<input VALUE=Delete TYPE=submit>
+<A HREF="{{url_for('Menu', restaurant_id=restaurant.id )}}">cancel</A>
+</form>
+
+</body></html>

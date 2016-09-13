@@ -1,6 +1,6 @@
 #!/usr/bin/python27
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for, flash
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -15,17 +15,17 @@ import re
 app = Flask(__name__)
 
 @app.route('/')
-@app.route('/hello')
 def Restaurants():
   session = connectDb()
   restaurants = session.query(Restaurant).order_by('name')
 
   output = ""
-  output += "<A HREF=new>Create New Restaurant</A><P>"
+  # output += "<A HREF=new>Create New Restaurant</A><P>"
   for restaurant in restaurants:
-    output += "%s<BR>" % ( restaurant.name )
-    output += "<A HREF=%s/edit>Edit</A> * " % restaurant.id
-    output += "<A HREF=%s/delete>Delete</A>" % restaurant.id
+    url = url_for('Menu', restaurant_id = restaurant.id)
+    output += "<A HREF=%s>%s</A><BR>" % ( url, restaurant.name )
+    # output += "<A HREF=%s/edit>Edit</A> * " % restaurant.id
+    # output += "<A HREF=%s/delete>Delete</A>" % restaurant.id
     output += "<P>"
   return output
 
@@ -36,22 +36,59 @@ def Menu(restaurant_id):
   menuItems = session.query(MenuItem).filter_by(restaurant_id = restaurant_id ).order_by('name')
   return render_template('menu.html', restaurant=restaurant, items = menuItems)
 
-@app.route('/menu/newitem/<int:restaurant_id>/')
+@app.route('/menu/newitem/<int:restaurant_id>/', methods=['GET','POST'])
 def NewMenuItem(restaurant_id):
-  return "page to create a new menu item, Task 1 complete!"
+## This function removes a menu item. A GET request gives a blank form
+  session = connectDb()
+  if request.method == 'POST':
+    restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
+    newItem = MenuItem(name=request.form['name'],restaurant_id = restaurant_id)
+    newItem.description = request.form['description']
+    newItem.price       = request.form['price']
+    newItem.course      = request.form['course']
+    session.add(newItem)
+    session.commit()
+    flash("%s created to %s." % ( newItem.name, restaurant.name ))
+    return redirect(url_for('Menu', restaurant_id = restaurant_id))
+  else:
+    return render_template('menuitem-new.html', restaurant_id=restaurant_id )
 
-@app.route('/menu/edititem/<int:restaurant_id>/<int:menu_id>')
+@app.route('/menu/edititem/<int:restaurant_id>/<int:menu_id>', methods=['GET','POST'])
 def EditMenuItem(restaurant_id, menu_id):
-  return "page to edit a new item, Task 2 complete!"
+  session = connectDb()
+  if request.method == 'POST':
+    editItem = session.query(MenuItem).filter_by( restaurant_id = restaurant_id).filter_by( id = menu_id ).one()
+    editItem.description = request.form['description']
+    editItem.price       = request.form['price']
+    editItem.course      = request.form['course']
+    session.add(editItem)
+    session.commit()
+    flash("%s edited." % ( editItem.name ))
+    return redirect(url_for('Menu', restaurant_id = restaurant_id))
+  else:
+    editItem = session.query(MenuItem).filter_by( restaurant_id = restaurant_id).filter_by( id = menu_id ).one()
+    restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
+    return render_template('menuitem-edit.html', restaurant=restaurant, editItem = editItem )
 
-@app.route('/menu/deleteitem/<int:restaurant_id>/<int:menu_id>')
+
+@app.route('/menu/deleteitem/<int:restaurant_id>/<int:menu_id>', methods=['GET','POST'])
 def DeleteMenuItem(restaurant_id, menu_id):
-  return "page to delete a menu item, Task 3 complete!"
-
-
+## This function removes a menu item. A GET request prompts for confirmation
+  session = connectDb()
+  if request.method == 'POST':
+    deleteItem = session.query(MenuItem).filter_by(restaurant_id = restaurant_id).filter_by(id = menu_id ).one()
+    session.delete(deleteItem)
+    session.commit()
+    flash("%s deleted." % ( deleteItem.name ))
+    return redirect(url_for('Menu', restaurant_id = restaurant_id))
+  else:
+    deleteItem = session.query(MenuItem).filter_by( restaurant_id = restaurant_id).filter_by( id = menu_id ).one()
+    restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
+    return render_template('menuitem-delete.html', restaurant=restaurant, deleteItem = deleteItem )
 
 
 def connectDb():
+## This little function does the work to connect to the database.
   engine = create_engine( 'sqlite:///restaurantmenu.db' )
   Base.metadata.bind = engine
   DBSession = sessionmaker(bind = engine)
@@ -61,5 +98,8 @@ def connectDb():
 
 if __name__ == '__main__':
   app.debug = True
+  app.secret_key = 'super_secret_key'
   app.run(host = '0.0.0.0', port = 8000)
+  # To use port 80, I did the following:
+  #   sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8000
 

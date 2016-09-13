@@ -1,11 +1,27 @@
 <html>
+  <head>
+  <link rel=stylesheet type=text/css HREF="{{ url_for('static', filename='styles.css')}}">
+  </head>
   <body>
     <h1>{{ restaurant.name }}</h1>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul>
+{% for message in messages %}
+<li> {{ message }}
+{% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
 
 <table>
     {% for i in items %}
 <tr><td>
     {{i.name}}
+</td><td>
+    {{i.course}}
 </td><td>
     {{i.description}}
 </td><td>
@@ -17,5 +33,6 @@
 </td></tr>
     {% endfor %}
 </table>
+    <A HREF="{{url_for('NewMenuItem', restaurant_id=restaurant.id )}}">new</A>
 
 </body></html>

@@ -1,0 +1,30 @@
+<html>
+  <head>
+  <link rel=stylesheet type=text/css HREF="{{ url_for('static', filename='styles.css')}}">
+  </head>
+  <body>
+    <h1>{{ editItem.name }}</h1>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul>
+{% for message in messages %}
+<li> {{ message }}
+{% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+<form action="{{ url_for('EditMenuItem', menu_id=editItem.id, restaurant_id=restaurant.id)}}" method = 'POST'>
+
+<p>name:<BR>
+   <input type=text size=20 name='name' VALUE="{{editItem.name}}">
+
+   <input type=text size=20 name='course' VALUE="{{editItem.course}}">
+   <input type=textedit size=50 name='description' VALUE="{{editItem.description}}">
+   <input type=text size=20 name='price' VALUE="{{editItem.price}}">
+
+<input type='submit' value='Save'>
+<A HREF="{{url_for('Menu', restaurant_id=restaurant.id )}}">cancel</A>
+</form></body></html>
+
