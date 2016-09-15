@@ -5,11 +5,9 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from database_setup import Base, Restaurant, MenuItem
+from database_setup import Base, Restaurant, MenuItem, engine
 
-import cgi
-import sys
-import re
+import cgi, sys, re
 
 # handler ...
 app = Flask(__name__)
@@ -104,7 +102,6 @@ def RestItem(restaurant_id, menu_id):
 
 def connectDb():
 ## This little function does the work to connect to the database.
-  engine = create_engine( 'sqlite:///restaurantmenu.db' )
   Base.metadata.bind = engine
   DBSession = sessionmaker(bind = engine)
   session = DBSession()
