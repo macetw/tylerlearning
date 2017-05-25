@@ -3,9 +3,10 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = 
+TARGET = samwidget
 DEPENDPATH += .
 INCLUDEPATH += .
+
 
 # Input
 SOURCES += sam.cpp
@@ -20,5 +21,5 @@ SOURCES      += glwidget.cpp \
                 window.cpp \
 		samdial.cpp \
 		samclock.cpp
-QT           += opengl
+QT           += opengl gui widgets
 

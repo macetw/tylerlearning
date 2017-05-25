@@ -21,6 +21,8 @@
 
 #include <QtGui>
 
+#include <QSlider>
+#include <QLayout>
 #include "glwidget.h"
 #include "window.h"
 

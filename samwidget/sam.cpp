@@ -3,7 +3,6 @@
 #include <QDialog>
 #include <QTimer>
 #include <QVBoxLayout>
-#include <QSound>
 
 #include "window.h"
 #include "samdial.h"

@@ -1,7 +1,6 @@
 #include <QDateTimeEdit>
 #include <QTimer>
 #include <QLabel>
-#include <QSound>
 #include <QHBoxLayout>
 
 #include "samclock.h"
@@ -53,12 +52,12 @@ void SamClock::update()
     }
 
     if (seconds % 10 == 0) {
-      QSound* sound = new QSound( "bedtime.wav", this );
-      if (sound->isAvailable()) {
-        sound->play();
-      } else {
+      //QSound* sound = new QSound( "bedtime.wav", this );
+      //if (sound->isAvailable()) {
+        //sound->play();
+      //} else {
         //qWarning("unable to play sound");
-      }
+      //}
 
     }
 
