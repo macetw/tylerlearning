@@ -59,6 +59,11 @@ Calculator::Calculator()
   connect( equal, SIGNAL(clicked()),
            this, SLOT(equalClicked()) );
 
+  QPushButton * squared = new QPushButton( this );
+  squared->setText("^");
+  connect( squared, SIGNAL(clicked()),
+           this, SLOT(squaredClicked()) );
+
   QIntValidator *validator = new QIntValidator( this );
 
   vLineEdit = new QLineEdit( this );
@@ -72,7 +77,7 @@ Calculator::Calculator()
   grid->setSpacing( 1 );
 
   //                 widget    row, column
-  grid->addWidget( numbers[0], 5,   0, 1, 3 );
+  grid->addWidget( numbers[0], 5,   0, 1, 4 );
   grid->addWidget( numbers[1], 4,   0 );
   grid->addWidget( numbers[2], 4,   1 );
   grid->addWidget( numbers[3], 4,   2 );
@@ -86,6 +91,7 @@ Calculator::Calculator()
   grid->addWidget( minus,      1,   1 );
   grid->addWidget( multiply,   1,   3 );
   grid->addWidget( devide,     2,   3 );
+  grid->addWidget( squared,    3,   3 );
   grid->addWidget( equal,      1,   2 );
   grid->addWidget( vLineEdit,  0,   0, 1, 3);
 }
@@ -107,6 +113,7 @@ void Calculator::numberEntered(int digit)
 
 void Calculator::plusClicked()
 {
+  equalClicked();
   vCurrentOperation = Plus;
   vClearAtNextDigit = true;
   QString text = vLineEdit->text();
@@ -115,6 +122,7 @@ void Calculator::plusClicked()
 
 void Calculator::minusClicked()
 {
+  equalClicked();
   vCurrentOperation = Minus;
   vClearAtNextDigit = true;
   QString text = vLineEdit->text();
@@ -123,6 +131,7 @@ void Calculator::minusClicked()
 
 void Calculator::multiplyClicked()
 {
+  equalClicked();
   vCurrentOperation = Multiply;
   vClearAtNextDigit = true;
   QString text = vLineEdit->text();
@@ -131,8 +140,21 @@ void Calculator::multiplyClicked()
 
 void Calculator::devideClicked()
 {
+  equalClicked();
   vCurrentOperation = Devide;
   vClearAtNextDigit = true;
+  QString text = vLineEdit->text();
+  vPreviousValue = text.toInt();
+}
+
+void Calculator::squaredClicked()
+{
+  equalClicked();
+  vCurrentOperation = None;
+  vClearAtNextDigit = true;
+  int value = vLineEdit->text().toInt();
+  int newValue = value * value;
+  vLineEdit->setText( QString::number( newValue ) );
   QString text = vLineEdit->text();
   vPreviousValue = text.toInt();
 }

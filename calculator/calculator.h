@@ -18,6 +18,7 @@ class Calculator : public QMainWindow
   void multiplyClicked();
   void devideClicked();
   void equalClicked();
+  void squaredClicked();
 
  protected:
   void keyPressEvent( QKeyEvent* event );
