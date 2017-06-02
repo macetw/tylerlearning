@@ -64,6 +64,11 @@ Calculator::Calculator()
   connect( squared, SIGNAL(clicked()),
            this, SLOT(squaredClicked()) );
 
+  QPushButton * clear = new QPushButton( this );
+  clear->setText("Clear");
+  connect( clear, SIGNAL(clicked()),
+           this, SLOT(clearClicked()) );
+
   QIntValidator *validator = new QIntValidator( this );
 
   vLineEdit = new QLineEdit( this );
@@ -92,6 +97,7 @@ Calculator::Calculator()
   grid->addWidget( multiply,   1,   3 );
   grid->addWidget( devide,     2,   3 );
   grid->addWidget( squared,    3,   3 );
+  grid->addWidget( clear,      4,   3 );
   grid->addWidget( equal,      1,   2 );
   grid->addWidget( vLineEdit,  0,   0, 1, 3);
 }
@@ -157,6 +163,14 @@ void Calculator::squaredClicked()
   vLineEdit->setText( QString::number( newValue ) );
   QString text = vLineEdit->text();
   vPreviousValue = text.toInt();
+}
+
+void Calculator::clearClicked()
+{
+  vCurrentOperation = None;
+  vClearAtNextDigit = true;
+  vPreviousValue = 0;
+  vLineEdit->setText("0");
 }
 
 void Calculator::equalClicked()
