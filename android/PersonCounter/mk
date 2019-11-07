@@ -1,0 +1,5 @@
+#!/bin/sh -e
+
+./gradlew clean
+./gradlew lint
+./gradlew assemble
