@@ -20,11 +20,26 @@ apply plugin: 'project-report'
 
 task showDate {
     dependsOn build
-    group = 'my tasks'
+    group = 'Specialty'
     description = 'Show the current date.'
     doLast {
         println ""
         println 'Current Date: ' + new Date()
-	println ""
+        println ""
     }
+}
+
+
+class ShowDate extends DefaultTask {
+   String dateMessage = "Date is: "
+
+   @TaskAction
+   void showDate() {
+       println dateMessage + new Date()
+   }
+}
+
+task showDateInJavaClass(type: ShowDate) {
+    group = 'Specialty'
+    description = "Show the current date with a java class."
 }
