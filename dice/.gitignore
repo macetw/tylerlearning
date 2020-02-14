@@ -1,2 +1,11 @@
 dice
 .qmake.stash
+
+
+CMakeCache.txt
+CMakeFiles
+CMakeLists.txt
+cmake_install.cmake
+dice_by_cmake
+dice_by_cmake_autogen
+dice_by_qmake

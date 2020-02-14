@@ -1,7 +1,11 @@
 TEMPLATE = app
-TARGET = dice
+TARGET = dice_by_qmake
 DEPENDPATH += .
 INCLUDEPATH += .
+
+MOC_DIR = qmake_files/moc
+OBJ_DIR = qmake_files/obj
+QRC_DIR = qmake_files/qrc
 
 QT = gui widgets
 
