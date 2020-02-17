@@ -1,0 +1,11 @@
+#!/bin/sh
+
+
+qmake
+make
+
+cmake .
+make
+
+bazel build //:dice_by_bazel --verbose_failures
+

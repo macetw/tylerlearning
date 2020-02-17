@@ -1,4 +1,4 @@
-#include <QMainWindow>
+#include <QtWidgets/QMainWindow>
 
 class QPushButton;
 class Dice;

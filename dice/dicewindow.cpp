@@ -1,5 +1,5 @@
-#include <QPushButton>
-#include <QLayout>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QLayout>
 #include "dice.h"
 #include "dicewindow.h"
 

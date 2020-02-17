@@ -4,8 +4,8 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 MOC_DIR = qmake_files/moc
-OBJ_DIR = qmake_files/obj
-QRC_DIR = qmake_files/qrc
+OBJECTS_DIR = qmake_files/obj
+RCC_DIR = qmake_files/qrc
 
 QT = gui widgets
 
