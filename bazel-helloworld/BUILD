@@ -1,5 +1,6 @@
 # Designed for use with Bazel
 
+load("//:foo.bzl", "foo")
 
 cc_binary(
         name = "helloworld",
@@ -7,7 +8,5 @@ cc_binary(
 	        deps = [ "//:helloworldlib" ]
 )
 
-cc_library(
-    name = "helloworldlib",
-    srcs = [ "main2.cpp", "main2.h" ]
-    )
+foo( name = "helloworldlib" )
+ 
