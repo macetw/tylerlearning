@@ -7,3 +7,7 @@ node_modules
 moc_*
 qrc_*
 Makefile
+
+bazel-bin
+bazel-out
+bazel-testlogs
