@@ -1,0 +1,6 @@
+
+if -d tmp then
+   python -m venv tmp
+endif
+source tmp/bin/activate.csh
+pip install exifread Pillow
