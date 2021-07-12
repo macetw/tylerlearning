@@ -1,16 +1,20 @@
 import os
+import re
 from slack_bolt import App
+from slack_bolt.adapter.socket_mode import SocketModeHandler
+
+app = App(token=os.environ["SLACK_BOT_TOKEN"])
+#      not needed on socket mode
+#          signing_secret=os.environ["SLACK_SIGNING_SECRET"])
 
 
-app = App(token=os.environ.get("SLACK_BOT_TOKEN"),
-          signing_secret=os.environ.get("SLACK_SIGNING_SECRET"))
-
-
-@app.message("hello")
-def message_hello(message, say):
+@app.message(re.compile("coin ([0-9]+)"))
+def message_hello(message, say, context):
+    coins = context['matches'][0]
     say(f"Hey there <@{message['user']}>!")
+    say(f"I have {coins} coins.")
+
 
 if __name__ == "__main__":
-    app.start(port=int(os.environ.get("PORT", "8080")))
-
-
+    handler = SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"])
+    handler.start()
